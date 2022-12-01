@@ -1,7 +1,7 @@
 import { cp } from 'fs/promises';
 import { join } from 'path';
 import * as url from 'url';
-import { checkExist } from './checkExist.js';
+import { checkExist } from '../checkExist.js';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
