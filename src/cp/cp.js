@@ -11,4 +11,4 @@ const spawnChildProcess = async (args) => {
     child.on('error', (error) => console.log(error.message))
 };
 
-spawnChildProcess();
+spawnChildProcess(['myArgs']);
