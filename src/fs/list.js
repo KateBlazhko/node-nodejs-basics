@@ -14,10 +14,12 @@ const list = async () => {
         };
 
         const dir = await fs.opendir(pathToFile);
-
+        const resultArr = []
         for await (const item of dir) {
-            console.log(item.name);
+            resultArr.push(item.name);
         }
+
+        console.log(resultArr)
 
     } catch(error) {
         console.error(error.message)
