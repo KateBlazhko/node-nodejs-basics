@@ -9,31 +9,19 @@ const LOGICAL_CORES = 12
 const runWorker =(workerData) => {
     const pathToWorker = join(__dirname, 'worker.js')
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const worker = new Worker(pathToWorker, { workerData });
-        worker.on('message', resolve);
-        worker.on('error', reject);
-        worker.on('exit', (code) => {
-          if (code !== 0)
-            reject(new Error(`Worker stopped with exit code ${code}`));
-        })
+        worker.on('message', (value) => resolve({ status: 'resolved', data: value.result }));
+        worker.on('error', () => resolve({ status: 'error', data: null }));
     })
 }
 
 const performCalculations = async () => {
-    const resultArr = []
-    for (let i = 0; i < LOGICAL_CORES; i++) {
-        try {
-            const result = await runWorker(INITIAL_NUMBER + i)
-            resultArr.push({status: 'resolved', data: result.result})
-        }
-        catch (error) {
-            resultArr.push({status: 'error', data: null})
-    
-        }
-    }
-    console.log(resultArr)
+    const resultArr = await Promise.all(
+        [...Array(LOGICAL_CORES).keys()].map(async (item) => await runWorker(INITIAL_NUMBER + item))
+    )
 
+    console.log(resultArr)
 };
 
 await performCalculations();
